@@ -7,6 +7,8 @@ Created on Oct 19, 2016
 from datetime import datetime
 import os
 import sys
+import mysql.connector
+import requests
 
 
 def getLog(testName, logDir):
@@ -57,9 +59,9 @@ def getLocalEnv(propertiesFileName):
         props = {}
         for line in properties:
             line = line.strip()
-            #skip line without "="
+            # skip line without "="
             if "=" not in line: continue
-            #skip comments
+            # skip comments
             if line.startswith("#"): continue
             k, v = line.split("=", 1)
             props[k] = v
@@ -71,26 +73,26 @@ def getLocalEnv(propertiesFileName):
         return -1
 
 
-def getTestCases(testRunId,log):
+def getTestCases(testRunId, log):
     TEST_CASE_KEYS = ('rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
     testCases = {}
     try:
         testCasesFile = open(str(testRunId) + '.txt')
-        #loop through lines in file
+        # loop through lines in file
         for line in testCasesFile:
             line = line.strip()
-            #skip empty line
+            # skip empty line
             if line == '': continue
-            #skip comments
+            # skip comments
             if line.startswith("#"): continue
-            #convert last element to a list
+            # convert last element to a list
             tc = line.split("|")
             tc[-1] = tc[-1].split(',')
             if tc[0] not in testCases:
-                #fill dict with keys from TEST_CASE_KEYS and slice of list , skipping 1st element - tcid
+                # fill dict with keys from TEST_CASE_KEYS and slice of list , skipping 1st element - tcid
                 testCases[tc[0]] = dict(zip(TEST_CASE_KEYS, tc[1:]))
             else:
-                qaPrint(log,"[INFO]Duplicated tcid {}, skipping line".format(tc[0]))
+                qaPrint(log, "[INFO]Duplicated tcid {}, skipping line".format(tc[0]))
         if not testCasesFile.closed: testCasesFile.close()
         return testCases
     except Exception as ex:
@@ -127,5 +129,25 @@ def getArguments(args):
         sys.exit(usage())
 
 
+def getDbConnection(url, username, user_password):
+    return -1
 
+def getDbCursor(cnx):
+    return -1
+
+
+def queryDb():
+    pass
+
+def buildURL(list_of_strings):
+    return ""
+
+def getHttpResponse(url, http_method, parameters):
+    return ""
+    
+def getHttpResponseCode(response, indicator):
+    return ""
+
+def checkEnv():
+    return True
 
